@@ -31,6 +31,20 @@ Les fichiers de test sont situés dans le dossier :
 
 ---
 
+## Couverture actuelle
+| Name                                               | Stmts | Miss | Cover |
+|----------------------------------------------------|-------|------|-------|
+| config.py                                          | 20    | 10   | 50%   |
+| gui.py                                             | 66    | 49   | 26%   |
+| openai_chat.py                                     | 46    | 40   | 13%   |
+| tests\test_config.py                               | 25    | 5    | 80%   |
+| tests\test_utils.py                                | 18    | 0    | 100%  |
+| tests\test_whisper_engine.py                       | 16    | 0    | 100%  |
+| utils.py                                           | 16    | 5    | 69%   |
+| whisper_engine.py                                  | 20    | 2    | 90%   |
+| -------------------------------------------------- |       |      |       |
+| TOTAL                                              | 227   | 111  | 51%   |
+
 ## ▶️ Lancement des tests
 
 ### 1. Assurez-vous d’avoir les dépendances :
