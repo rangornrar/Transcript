@@ -11,6 +11,9 @@ Elle permet également d'envoyer le texte transcrit à l'API OpenAI (ChatGPT) po
 - Envoi à l'API OpenAI (GPT-3.5-turbo)
 - Enregistrement automatique des préférences utilisateur
 
+## Ecran
+![Transcript image](./img/transcript_v6.png "Transcript application")
+
 ## Prérequis
 
 - Python ≥ 3.9
