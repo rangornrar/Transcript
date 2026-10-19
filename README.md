@@ -66,7 +66,7 @@ Les tests de préférences et de transcription isolent le moteur audio : aucun G
 
 Le moteur utilise actuellement le modèle Whisper `base`. Les préférences modèle/langue/CUDA/découpage présentes dans le code d’interface ne sont pas toutes raccordées au moteur ; leur sauvegarde ne signifie pas qu’elles modifient la transcription. L’appel API est présent dans `openai_chat.py`, mais son parcours utilisateur reste à finaliser dans l’interface.
 
-La clé peut être enregistrée dans `.env`, exclu de Git. Les nouvelles sauvegardes des préférences ne l’incluent plus ; un ancien fichier de préférences peut encore la contenir. Le traitement local de l’audio et l’envoi de texte à une API sont deux flux distincts.
+La clé peut être enregistrée dans `.env`, exclu de Git. La sauvegarde transfère la clé saisie vers `.env` avant d’écrire les préférences sans cette clé. Un ancien fichier de préférences peut encore la contenir jusqu’à cette migration. Le traitement local de l’audio et l’envoi de texte à une API sont deux flux distincts.
 
 `requirements.in` définit les contraintes ; `requirements.txt` fige la résolution des dépendances. Pour la mettre à jour volontairement avec uv :
 

@@ -128,5 +128,6 @@ def get_etat_interface():
         "cuda": cuda_var.get(),
         "decoupage": decoupage_var.get(),
         "segment_duration": segment_length_var.get(),
-        "prompt": champ_prompt.get("1.0", "end").strip() if champ_prompt else ""
+        "prompt": champ_prompt.get("1.0", "end").strip() if champ_prompt else "",
+        "apikey": api_key_var.get().strip()
     }

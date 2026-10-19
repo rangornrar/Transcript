@@ -128,8 +128,6 @@ torch==2.14.1
     # via
     #   -r requirements.in
     #   openai-whisper
-torchaudio==2.11.0
-    # via -r requirements.in
 tqdm==4.70.1
     # via openai-whisper
 triton==3.8.0 ; (python_full_version < '3.15' and sys_platform == 'linux') or (platform_machine == 'x86_64' and sys_platform == 'linux') or sys_platform == 'linux2'

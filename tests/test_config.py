@@ -2,7 +2,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from config import charger_preferences, sauvegarder_preferences
 
 
@@ -20,7 +20,10 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(charger_preferences(), {"model": "small", "language": "en", "prompt": "Été"})
 
     def test_cle_api_exclue_des_preferences(self):
-        sauvegarder_preferences({"model": "small", "apikey": "secret-for-test"})
+        dotenv = Mock()
+        with patch.dict("sys.modules", {"dotenv": dotenv}):
+            sauvegarder_preferences({"model": "small", "apikey": "secret-for-test"})
+        dotenv.set_key.assert_called_once_with(".env", "OPENAI_API_KEY", "secret-for-test")
         self.assertNotIn("secret-for-test", self.path.read_text())
         self.assertEqual(json.loads(self.path.read_text()), {"model": "small"})
 
