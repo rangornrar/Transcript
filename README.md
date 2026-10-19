@@ -5,8 +5,7 @@ Elle permet également d'envoyer le texte transcrit à l'API OpenAI (ChatGPT) po
 
 ## Fonctionnalités
 - Transcription de fichiers audio (.wav, .mp3, .m4a, .flac)
-- Option de découpage de long fichiers audio en segments
-- Utilisation GPU (CUDA) si disponible
+- Exécution Whisper locale ; le choix CPU/GPU dépend du moteur et de PyTorch
 - Interface Tkinter simple et claire
 - Envoi à l'API OpenAI (GPT-3.5-turbo)
 - Enregistrement automatique des préférences utilisateur
@@ -16,13 +15,15 @@ Elle permet également d'envoyer le texte transcrit à l'API OpenAI (ChatGPT) po
 
 ## Prérequis
 
-- Python ≥ 3.9
+- Python 3.11 ou supérieur (environnement de référence : 3.11)
 - Une clé API OpenAI : https://platform.openai.com/account/api-keys
 
 ## Installation
 
+Créer et activer un environnement virtuel avant l’installation. FFmpeg doit être installé et accessible dans le PATH pour le décodage audio.
+
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 ## Utilisation
@@ -36,7 +37,7 @@ python main.py
 Crée un fichier `.env` à la racine avec :
 
 ```env
-OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+OPENAI_API_KEY=votre_cle_locale
 ```
 
 ---
@@ -53,3 +54,24 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ## Licence
 
 MIT
+
+
+## Qualité et limites
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+Les tests de préférences et de transcription isolent le moteur audio : aucun GPU, modèle téléchargé ou appel API payant n’est nécessaire. La transcription réelle et l’interface doivent être vérifiées séparément.
+
+Le moteur utilise actuellement le modèle Whisper `base`. Les préférences modèle/langue/CUDA/découpage présentes dans le code d’interface ne sont pas toutes raccordées au moteur ; leur sauvegarde ne signifie pas qu’elles modifient la transcription. L’appel API est présent dans `openai_chat.py`, mais son parcours utilisateur reste à finaliser dans l’interface.
+
+La clé peut être enregistrée dans `.env`, exclu de Git. La sauvegarde transfère la clé saisie vers `.env` avant d’écrire les préférences sans cette clé. Un ancien fichier de préférences peut encore la contenir jusqu’à cette migration. Le traitement local de l’audio et l’envoi de texte à une API sont deux flux distincts.
+
+`requirements.in` définit les contraintes ; `requirements.txt` fige la résolution des dépendances. Pour la mettre à jour volontairement avec uv :
+
+```bash
+uv pip compile requirements.in --universal --python-version 3.11 --output-file requirements.txt
+```
+
+La résolution des dépendances ne remplace pas un essai d’installation audio/GPU sur la machine cible.

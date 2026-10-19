@@ -21,14 +21,21 @@ def charger_preferences():
 
 # 💾 Sauvegarde des préférences utilisateur à la fermeture de l'app
 logger.info('Sauvegarde des préférences utilisateur.')
-def sauvegarder_preferences():
+def sauvegarder_preferences(prefs=None):
     """
     Récupère l'état de l'interface graphique via `get_etat_interface`
     et enregistre les préférences utilisateur dans un fichier JSON.
     """
-    from gui import get_etat_interface  # Import local pour éviter les import circulaires
-    prefs = get_etat_interface()
+    if prefs is None:
+        from gui import get_etat_interface
+        prefs = get_etat_interface()
+    # Credentials belong in .env, never in exported UI preferences.
+    api_key = prefs.get("apikey", "").strip()
+    prefs = {key: value for key, value in prefs.items() if key != "apikey"}
     try:
+        if api_key:
+            from dotenv import set_key
+            set_key(".env", "OPENAI_API_KEY", api_key)
         with open(CONFIG_PATH, "w", encoding="utf-8") as f:
             json.dump(prefs, f, indent=2)
     except Exception as e:

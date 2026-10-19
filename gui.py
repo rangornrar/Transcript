@@ -1,10 +1,12 @@
+import os
+
 from utils import logger
 
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from whisper_engine import transcrire, charger_modele
 from openai_chat import envoyer_a_chatgpt, tester_api_key, enregistrer_api_key
-from utils import install_missing_libraries, toggle_visibility
+from utils import toggle_visibility
 
 # 🌐 Variables globales d'état de l'IHM (remplies plus tard dans `construire_interface`)
 champ_prompt = None
@@ -23,6 +25,7 @@ def construire_interface(root, prefs):
     """
 
     # 🧠 Variables d'état liées à l'interface, associées au root
+    global champ_prompt, champ_reponse
     global model_choice, language_choice, style_choice, decoupage_var, cuda_var, segment_length_var, api_key_var
     model_choice = tk.StringVar(master=root, value="large")
     language_choice = tk.StringVar(master=root, value="fr")
@@ -32,7 +35,6 @@ def construire_interface(root, prefs):
     segment_length_var = tk.IntVar(master=root, value=30)
     api_key_var = tk.StringVar(master=root)
 
-    install_missing_libraries()  # Vérifie les dépendances nécessaires
 
     # 📥 Application des préférences utilisateur
     model_choice.set(prefs.get("model", "large"))
@@ -41,7 +43,7 @@ def construire_interface(root, prefs):
     cuda_var.set(prefs.get("cuda", False))
     decoupage_var.set(prefs.get("decoupage", False))
     segment_length_var.set(prefs.get("segment_duration", 30))
-    api_key_var.set(prefs.get("apikey", ""))
+    api_key_var.set(os.getenv("OPENAI_API_KEY", prefs.get("apikey", "")))
 
     # 🎨 Configuration du style global de l'interface
     style = ttk.Style()

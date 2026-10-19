@@ -1,5 +1,4 @@
-import whisper, torch, os, time, math
-from threading import Thread
+import os
 from utils import logger  # Logger centralisé pour journalisation
 
 def transcrire(liste_fichiers, texte_info, progress_bar):
@@ -16,7 +15,7 @@ def transcrire(liste_fichiers, texte_info, progress_bar):
     logger.info('Transcription démarrée.')
 
     # Chargement du modèle Whisper en mode "base"
-    model = whisper.load_model("base")
+    model = charger_modele()
     logger.debug('Modèle Whisper chargé.')
 
     fichiers = liste_fichiers.get(0, "end")  # Récupère tous les fichiers sélectionnés
@@ -46,4 +45,5 @@ def charger_modele():
         whisper.Whisper: Le modèle prêt à l'emploi.
     """
     logger.debug("Chargement du modèle Whisper (base)")
+    import whisper
     return whisper.load_model("base")

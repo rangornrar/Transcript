@@ -1,41 +1,33 @@
-import unittest
 import json
-import os
-from config import charger_preferences, sauvegarder_preferences, CONFIG_PATH
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import Mock, patch
+from config import charger_preferences, sauvegarder_preferences
+
 
 class TestConfig(unittest.TestCase):
-
     def setUp(self):
-        self.backup = None
-        if os.path.exists(CONFIG_PATH):
-            with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
-                self.backup = f.read()
-
-    def tearDown(self):
-        if self.backup is not None:
-            with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
-                f.write(self.backup)
-        elif os.path.exists(CONFIG_PATH):
-            os.remove(CONFIG_PATH)
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.path = Path(self.directory.name) / "preferences.json"
+        self.patcher = patch("config.CONFIG_PATH", str(self.path))
+        self.patcher.start()
+        self.addCleanup(self.patcher.stop)
 
     def test_sauvegarde_et_chargement(self):
-        # Fake interface data
-        from types import SimpleNamespace
-        import builtins
-        from gui import get_etat_interface
+        sauvegarder_preferences({"model": "small", "language": "en", "prompt": "Été"})
+        self.assertEqual(charger_preferences(), {"model": "small", "language": "en", "prompt": "Été"})
 
-        builtins.get_etat_interface = lambda: {
-            "model": "small",
-            "language": "en",
-            "theme": "default",
-            "cuda": False,
-            "decoupage": False,
-            "segment_duration": 15,
-            "prompt": "Test prompt",
-            "apikey": "sk-test"
-        }
+    def test_cle_api_exclue_des_preferences(self):
+        dotenv = Mock()
+        with patch.dict("sys.modules", {"dotenv": dotenv}):
+            sauvegarder_preferences({"model": "small", "apikey": "secret-for-test"})
+        dotenv.set_key.assert_called_once_with(".env", "OPENAI_API_KEY", "secret-for-test")
+        self.assertNotIn("secret-for-test", self.path.read_text())
+        self.assertEqual(json.loads(self.path.read_text()), {"model": "small"})
 
-        sauvegarder_preferences()
-        prefs = charger_preferences()
-        self.assertEqual(prefs["model"], "small")
-        self.assertEqual(prefs["language"], "en")
+    def test_fichier_absent_ou_invalide(self):
+        self.assertEqual(charger_preferences(), {})
+        self.path.write_text("not json")
+        self.assertEqual(charger_preferences(), {})

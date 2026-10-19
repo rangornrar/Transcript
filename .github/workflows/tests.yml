@@ -1,0 +1,17 @@
+name: Tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      # Unit tests isolate the speech engine; they need neither a GPU nor credentials.
+      - run: python -m unittest discover -s tests -v
+      - run: python -m compileall -q .

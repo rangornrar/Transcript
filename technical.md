@@ -91,7 +91,7 @@ transcripteur_whisper/
 
 Listées dans `requirements.txt` :
 - openai
-- whisper
+- openai-whisper (module Python `whisper`)
 - torch
 - torchaudio
 - python-dotenv
@@ -107,7 +107,7 @@ Listées dans `requirements.txt` :
   - durée des segments
   - préférence CUDA / découpage
   - dernier prompt saisi
-  - clé API OpenAI
+  - aucune clé API dans les nouvelles sauvegardes (clé locale dans `.env`)
 
 ---
 
@@ -132,3 +132,8 @@ transcripteur.log
 ## 🧠 Auteurs & Crédits
 
 Projet initialement conçu pour permettre aux utilisateurs non techniques de transcrire leurs fichiers audio et d’utiliser l’intelligence artificielle simplement via une interface locale.
+
+
+## Validation automatisée actuelle
+
+Voir le README et `.github/workflows/tests.yml`. Les tests tournent sans dépendance au moteur Whisper grâce à son chargement différé et à une simulation limitée à la frontière du moteur. Les anciennes options d’interface ne sont pas toutes implémentées par le moteur de transcription.
