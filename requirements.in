@@ -1,0 +1,5 @@
+openai>=1,<4
+openai-whisper==20250625
+torch>=2.6,<3
+torchaudio>=2.6,<3
+python-dotenv>=1,<2

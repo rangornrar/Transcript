@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+
 from utils import logger  # Logger pour journaliser les événements (démarrage, arrêt, erreurs...)
 
 from tkinter import Tk  # Création de la fenêtre principale Tkinter
@@ -10,6 +12,7 @@ def main():
     Initialise la fenêtre Tkinter, charge les préférences, construit l'IHM,
     et démarre la boucle principale de l'application.
     """
+    load_dotenv()
     root = Tk()  # Création de la fenêtre principale
     prefs = charger_preferences()  # Chargement des préférences utilisateur sauvegardées
     construire_interface(root, prefs)  # Construction de l'IHM selon les préférences
